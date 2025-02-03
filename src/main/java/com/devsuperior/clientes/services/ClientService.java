@@ -5,6 +5,8 @@ import com.devsuperior.clientes.entities.Client;
 import com.devsuperior.clientes.repositories.ClientRepository;
 import com.devsuperior.clientes.services.exceptions.ResourseNotFoundExceptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,5 +26,13 @@ public class ClientService {
         return new ClientDTO(client.getId(), client.getName(), client.getCpf(),
                 client.getIncome(), client.getBirthDate(), client.getChildren());
 
+    }
+
+    //GET All
+    @Transactional(readOnly = true)
+    public Page<ClientDTO> findByAll(Pageable pageable) {
+        Page<Client> result = repository.findAll(pageable);
+        return result.map(x -> new ClientDTO(x.getId(), x.getName(), x.getCpf(),
+                x.getIncome(), x.getBirthDate(), x.getChildren()));
     }
 }
